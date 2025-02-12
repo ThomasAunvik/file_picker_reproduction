@@ -9,16 +9,14 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: AudioPickerScreen(),
-    );
+    return MaterialApp(home: AudioPickerScreen());
   }
 }
 
 class AudioPickerScreen extends StatelessWidget {
   Future<void> _pickAudioFile() async {
     // Check and request storage permission
-    if (await Permission.storage.request().isGranted) {
+    if (await (Permission.audio.request()).isGranted) {
       // Open file picker for audio files
       FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.audio,
@@ -40,9 +38,7 @@ class AudioPickerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Audio Picker"),
-      ),
+      appBar: AppBar(title: Text("Audio Picker")),
       body: Center(
         child: ElevatedButton(
           onPressed: _pickAudioFile,
