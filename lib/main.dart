@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_file_dialog/flutter_file_dialog.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,19 +17,23 @@ class MyApp extends StatelessWidget {
 
 class AudioPickerScreen extends StatelessWidget {
   Future<void> _pickAudioFile() async {
-    // Configure the file picker to only show audio files
-    final params = OpenFileDialogParams(
-      // fileTypeFilter: ['audio/*'], // Filter for audio files
-    );
+    // Check and request storage permission
+    if (await Permission.storage.request().isGranted) {
+      // Open file picker for audio files
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.audio,
+      );
 
-    // Open the file picker
-    final filePath = await FlutterFileDialog.pickFile(params: params);
-
-    if (filePath != null) {
-      print("Selected audio file: $filePath");
-      // Handle the file path (e.g., play the audio)
+      if (result != null) {
+        // Get the selected file path
+        String filePath = result.files.single.path!;
+        print("Selected audio file: $filePath");
+        // Handle the file path (e.g., play the audio)
+      } else {
+        print("No file selected.");
+      }
     } else {
-      print("No file selected.");
+      print("Storage permission denied.");
     }
   }
 
